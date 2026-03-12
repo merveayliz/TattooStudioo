@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engin Studio | Tattoo & Piercing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Syncopate:wght@400;700&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg: #000000;
+            --red: #bc0000;
+            --text: #ffffff;
+            --card-size: 180px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; 
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        #custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: var(--red);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        #intro-stage {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+
+        .intro-bg {
+            position: absolute;
+            inset: 0;
+            background: url('img/g.jpeg') center/cover no-repeat;
+            filter: grayscale(1) brightness(0.2);
+            opacity: 20;
+            transition: 1.5s ease;
+        }
+
+        .intro-title {
+            position: relative;
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(2rem, 8vw, 4rem);
+            letter-spacing: 20px;
+            color: #fff;
+            z-index: 2;
+            animation: pulseText 2s infinite alternate;
+        }
+
+        @keyframes pulseText {
+            from { letter-spacing: 20px; opacity: 0.5; }
+            to { letter-spacing: 25px; opacity: 1; }
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 25px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 5000;
+            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.5);
+        }
+
+        .engin-logo {
+            font-family: 'Cinzel', serif;
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: var(--text);
+            text-decoration: none;
+            letter-spacing: 4px;
+        }
+
+        .dm-button {
+            border: 1px solid var(--red);
+            color: #fff;
+            padding: 10px 25px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: 0.3s;
+            position: center;
+            overflow: hidden;
+        }
+
+        .dm-button:hover { 
+            background: var(--red); 
+            box-shadow: 0 0 20px var(--red); 
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 10% 60px;
+            position: relative;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            width: 100%;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .hero-text h1 {
+            font-family: 'Syncopate', sans-serif;
+            font-size: clamp(1.8rem, 5vw, 3.5rem);
+            line-height: 1.1;
+            text-transform: uppercase;
+            perspective: 1000px;
+        }
+
+        .hero-text h1 span { 
+            color: var(--red); 
+            text-shadow: 0 0 20px rgba(188,0,0,0.5); 
+        }
+
+        .flash-cards-stack {
+            display: flex;
+            flex-direction: column; 
+            gap: 25px; 
+            align-items: center;
+            transform: perspective(1000px) rotateY(-10deg);
+        }
+
+        .mini-card {
+            width: var(--card-size);
+            aspect-ratio: 1/1;
+            background: #111;
+            border: 1px solid #222;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .mini-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(1);
+            transition: 0.8s;
+        }
+
+        .mini-card:hover {
+            border-color: var(--red);
+            box-shadow: 0 0 40px rgba(188, 0, 0, 0.5);
+            transform: scale(1.1) rotate(2deg) translateX(20px);
+            z-index: 10;
+        }
+
+        .mini-card:hover img { 
+            filter: grayscale(0); 
+            transform: scale(1.1); 
+        }
+
+        .artists-grid {
+            padding: 150px 10%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 100px;
+        }
+
+        .profile-container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: 0.5s;
+        }
+
+        .circle-frame {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto 30px;
+        }
+
+        .circle-frame img {
+            width: 100%;
+            height: 100%; 
+            border-radius: 50%;
+            object-fit: cover; 
+            filter: grayscale(1); 
+            border: 2px solid #1a1a1a;
+            transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .profile-container:hover .circle-frame img {
+            filter: grayscale(0);
+            border-color: var(--red);
+            transform: scale(1.02);
+        }
+
+        .circle-frame::after {
+            content: ''; 
+            position: absolute; 
+            inset: -15px;
+            border: 1px solid var(--red); 
+            border-radius: 50%;
+            animation: spin 25s linear infinite;
+            opacity: 0.5;
+        }
+
+        .role {
+            color: var(--red);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 5px;
+            margin-bottom: 15px;
+        }
+
+        .artist-bio {
+            font-size: 0.95rem;
+            color: #aaa;
+            max-width: 320px;
+            margin: 20px 0 30px;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .insta-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.8rem;
+            border: 1px solid #222;
+            padding: 12px 30px;
+            border-radius: 0; 
+            transition: 0.4s;
+            background: linear-gradient(45deg, transparent 50%, #fff 50%);
+            background-size: 200% 100%;
+            background-position: 0% 0%;
+        }
+
+        .insta-btn:hover {
+            background-position: 100% 0%;
+            color: #000;
+            border-color: #fff;
+        }
+
+        .gallery-wrap { padding: 100px 5%; background: #050505; }
+        .section-tag { color: var(--red); text-transform: uppercase; text-align: center; display: block; letter-spacing: 8px; margin-bottom: 60px; font-size: 0.9rem; font-family: 'Syncopate'; }
+
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .work-item {
+            position: relative;
+            aspect-ratio: 1/1;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .work-item img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: grayscale(1) brightness(0.4);
+            transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .work-item:hover img { filter: grayscale(0) brightness(1); transform: scale(1.15); }
+
+        .work-label {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(188, 0, 0, 0.2);
+            opacity: 0;
+            transition: 0.4s;
+            font-family: 'Cinzel';
+            color: #fff;
+            letter-spacing: 2px;
+        }
+
+        .work-item:hover .work-label { opacity: 1; }
+
+        footer {
+            padding: 80px 10%;
+            background: #000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #111;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        .social-links { display: flex; gap: 20px; }
+        .social-links a { color: #555; text-decoration: none; transition: 0.3s; }
+        .social-links a:hover { color: var(--red); }
+
+        @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .hero-text h1 { font-size: 2.5rem; }
+            .hero { padding: 100px 5%; }
+            :root { --card-size: 140px; }
+            .circle-frame { width: 220px; height: 220px; }
+            .artists-grid { gap: 40px; }
+        }
+
+        @media (max-width: 768px) {
+            #custom-cursor { display: none; }
+            * { cursor: auto; }
+            .intro-bg{ opacity: 15;}
+            .hero { padding: 80px 5% 40px; min-height: 80vh; overflow: hidden; }
+            .hero-content { 
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                height: 400px; 
+            }
+
+            .hero-text {
+                z-index: 5;
+                text-align: left;
+                width: 100%;
+                pointer-events: none;
+            }
+            .hero-text h1 { font-size: 1.8rem; letter-spacing: 1px; }
+
+            .flash-cards-stack {
+                position: absolute;
+                inset: 0;
+                transform: none !important;
+                display: block; 
+            }
+
+            .mini-card {
+                position: absolute;
+                width: 80px;
+                border-radius: 8px;
+                opacity: 0.6;
+                transition: none;
+            }
+
+            .mini-card:hover { transform: none; box-shadow: none; border-color: #222; }
+
+            .mini-card:hover img { filter: grayscale(1); transform: none; }
+
+            .mini-card:nth-child(1) { top: 0; right: 0; }
+
+            .mini-card:nth-child(2) { bottom: 0; left: 0; }
+
+            .mini-card:nth-child(3) { top: 40%; right: -20px; width: 60px; }
+
+            .mini-card:nth-child(4) { bottom: 0; right: 10%; }
+
+            .artists-grid { 
+                grid-template-columns: 1fr 1fr; 
+                gap: 15px; 
+                padding: 60px 3%; 
+            }
+            .circle-frame { width: 120px; height: 120px; margin-bottom: 15px; }
+
+            .circle-frame::after { display: none; } 
+            
+            .artist-bio { font-size: 0.7rem; line-height: 1.4; margin: 10px 0; }
+
+            .role { font-size: 0.5rem; letter-spacing: 2px; }
+
+            h2[style*='Cinzel'] { font-size: 1.2rem !important; letter-spacing: 2px !important; }
+
+            .insta-btn { padding: 8px 12px; font-size: 0.6rem; }
+
+            .work-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+
+            footer { flex-direction: column; gap: 20px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="custom-cursor"></div>
+
+    <div id="intro-stage">
+        <div class="intro-bg"></div>
+        <div class="intro-title">ENGIN</div>
+    </div>
+
+    <nav id="main-nav" style="opacity:0">
+        <a href="#" class="engin-logo">PRIVATE STUDIO</a>
+        <a href="https://www.instagram.com/azune.ink" target="_blank" class="dm-button">Randevu</a>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text" style="opacity:0" id="hero-title">
+                <span style="color:var(--red); font-size: 0.8rem; letter-spacing: 5px; margin-bottom: 20px; display: block;">EST. 2026</span>
+                <h1>Pain is<br><span>Temporal</span><br>Art is Forever.</h1>
+                <p style="color: #666; margin-top: 25px; font-size: 0.9rem; letter-spacing: 3px; text-transform: uppercase;">Premium Tattoo & Piercing Experience</p>
+            </div>
+
+            <div class="flash-cards-stack" id="cards-area" style="opacity:0">
+                <div class="mini-card"><img src="img/1.jpeg" alt="Flash 1" onerror="this.src='https://picsum.photos/400/400?1'"></div>
+                <div class="mini-card"><img src="img/2.jpeg" alt="Flash 2" onerror="this.src='https://picsum.photos/400/400?2'"></div>
+                <div class="mini-card"><img src="img/3.jpeg" alt="Flash 3" onerror="this.src='https://picsum.photos/400/400?3'"></div>
+                <div class="mini-card"><img src="img/4.jpeg" alt="Flash 4" onerror="this.src='https://picsum.photos/400/400?4'"></div>
+            </div>
+        </div>
+    </section>
+<hr>
+    <section class="artists-grid">
+        <div class="profile-container">
+            <div class="circle-frame">
+                <img src="img/pe.jpg" alt="Engin" onerror="this.src='https://images.unsplash.com/photo-1598331668826-20cecc596b86?w=600'">
+            </div>
+            <span class="role">Lead Tattoo Artist</span>
+            <h2 style="font-family:'Cinzel'; font-size: 2.5rem; letter-spacing: 5px;">ENGIN</h2>
+            <p class="artist-bio">"Vücudunuz bir tuval, biz ise ruhunuzu o tuvale işleyen fırçayız. Her tasarım, kişiye özel bir başyapıttır."</p>
+            <a href="https://www.instagram.com/azune.ink?igsh=MWFhdWQzMG5tYjNkaw==" target="_blank" class="insta-btn">
+                <i data-lucide="instagram"></i> VIEW PORTFOLIO
+            </a>
+        </div>
+
+        <div class="profile-container">
+            <div class="circle-frame">
+                <img src="img/pk.jpg" alt="Esra" onerror="this.src='https://images.unsplash.com/photo-1594744803329-a584af1cae24?w=600'">
+            </div>
+            <span class="role">Piercing Specialist</span>
+            <h2 style="font-family:'Cinzel'; font-size: 2.5rem; letter-spacing: 5px;">ESRA</h2>
+            <p class="artist-bio">"Zarafet detaylarda gizlidir. Piercing sadece bir aksesuar değil, bedeninizdeki en şık imzanızdır."</p>
+            <a href="https://www.instagram.com/azunes.piercing?igsh=ZG1saXVyZ2Fkc2li" target="_blank" class="insta-btn">
+                <i data-lucide="instagram"></i> VIEW PORTFOLIO
+            </a>
+        </div>
+    </section>
+<hr>
+    <section class="gallery-wrap">
+        <span class="section-tag">// SELECTED WORKS</span>
+        <div class="work-grid">
+            <div class="work-item"><img src="img/1.jpg" onerror="this.src='https://picsum.photos/600/600?1'"><div class="work-label">BLACKWORK</div></div>
+            <div class="work-item"><img src="img/2.jpg" onerror="this.src='https://picsum.photos/600/600?2'"><div class="work-label">MINIMAL</div></div>
+            <div class="work-item"><img src="img/3.jpg" onerror="this.src='https://picsum.photos/600/600?3'"><div class="work-label">TRADITIONAL</div></div>
+            <div class="work-item"><img src="img/4.jpg" onerror="this.src='https://picsum.photos/600/600?4'"><div class="work-label">PIERCING</div></div>
+            <div class="work-item"><img src="img/5.jpg" onerror="this.src='https://picsum.photos/600/600?5'"><div class="work-label">GEOMETRIC</div></div>
+            <div class="work-item"><img src="img/6.jpg" onerror="this.src='https://picsum.photos/600/600?6'"><div class="work-label">REALISM</div></div>
+            <div class="work-item"><img src="img/7.jpg" onerror="this.src='https://picsum.photos/600/600?7'"><div class="work-label">BLACKWORK</div></div> 
+            <div class="work-item"><img src="img/8.jpg" onerror="this.src='https://picsum.photos/600/600?8'"><div class="work-label">REALISM</div></div>
+            <div class="work-item"><img src="img/9.jpg" onerror="this.src='https://picsum.photos/600/600?9'"><div class="work-label">BLACKWORK</div></div>
+            <div class="work-item"><img src="img/10.jpg" onerror="this.src='https://picsum.photos/600/600?10'"><div class="work-label">REALISM</div></div>
+            <div class="work-item"><img src="img/11.jpg" onerror="this.src='https://picsum.photos/600/600?11'"><div class="work-label">REALISM</div></div>
+            <div class="work-item"><img src="img/12.jpg" onerror="this.src='https://picsum.photos/600/600?12'"><div class="work-label">BLACKWORK</div></div>
+        </div>
+    </section>
+
+    <footer>
+        <div style="color:#444">© 2026 ENGIN STUDIO. CRAFTED WITH PASSION IN ESKIŞEHIR.</div>
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/ayliz-azaklı-74579b318/" target="_blank">
+                Designed by <span style="color:var(--red)">Ayliz Azaklı</span>
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        const cursor = document.getElementById('custom-cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        const hoverables = document.querySelectorAll('a, .mini-card, .work-item');
+        hoverables.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(4)';
+                cursor.style.background = 'white';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursor.style.background = 'var(--red)';
+            });
+        });
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const intro = document.getElementById('intro-stage');
+                intro.style.transition = '1.8s cubic-bezier(0.85, 0, 0.15, 1)';
+                intro.style.transform = 'translateY(-100%)';
+
+                setTimeout(() => {
+                    const ids = ['main-nav', 'hero-title', 'cards-area'];
+                    ids.forEach((id, i) => {
+                        const el = document.getElementById(id);
+                        el.style.opacity = '1';
+                        el.style.transform = 'translateY(0)';
+                        el.style.transition = `1.5s ${i * 0.2}s cubic-bezier(0.2, 0.8, 0.2, 1)`;
+                    });
+                }, 800);
+            }, 2500);
+        });
+
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const heroText = document.getElementById('hero-title');
+            const cards = document.getElementById('cards-area');
+            
+            heroText.style.transform = `translateY(${scrolled * 0.3}px)`;
+            cards.style.transform = `translateY(${scrolled * -0.1}px) perspective(1000px) rotateY(-10deg)`;
+        });
+    </script>
+</body>
+</html>
